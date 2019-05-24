@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # 3rd party modules
     'django_celery_beat',
     'django_celery_results',
+    'django_nose',
 
     # My modules
     'newspaper',
@@ -129,6 +130,13 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_TASK_SERIALIZER = 'json'
+
+# nose to run tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=newspaper,data',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

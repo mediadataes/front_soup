@@ -17,6 +17,12 @@ class NewspaperTestCase(TestCase):
                                      active=False)
         self.np_disabled.save()
 
+    def test_print_newspaper(self):
+        name = 'El pais'
+        newspaper = Newspaper(name=name, url='https://elpais.com/')
+        newspaper.save()
+        self.assertEqual(str(newspaper), name)
+
     def test_create_newspaper(self):
         start_pt = PeriodicTask.objects.count()
         newspaper = Newspaper(name='El pais', url='https://elpais.com/')
