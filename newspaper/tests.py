@@ -1,4 +1,6 @@
+from datetime import timedelta
 from django.test import Client, TestCase
+from django.utils import timezone
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
 from data.models import Data
@@ -45,6 +47,20 @@ class NewspaperTestCase(TestCase):
         self.np.save()
         end_pt = PeriodicTask.objects.count()
         self.assertEqual(end_pt - start_pt, 0)
+
+    def test_edit_newspaper_morning(self):
+        task_name = '{} morning'.format(self.np.name)
+        pt_schedule = PeriodicTask.objects.get(name=task_name).schedule
+        start_pt = PeriodicTask.objects.count()
+        time = timezone.now().time()
+        if self.np.morning == time:
+            time = (timezone.now() - timedelta(hour=1)).time()
+        self.np.morning = time
+        self.np.save()
+        end_pt = PeriodicTask.objects.count()
+        pt_schedule_end = PeriodicTask.objects.get(name=task_name).schedule
+        self.assertEqual(end_pt - start_pt, 0)
+        self.assertNotEqual(pt_schedule, pt_schedule_end)
 
     def test_disabled_newspaper(self):
         start_pt = PeriodicTask.objects.count()
