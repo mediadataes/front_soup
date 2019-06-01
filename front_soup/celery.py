@@ -3,9 +3,9 @@ import os
 from celery import Celery
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'upvnews.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'front_soup.settings')
 
-app = Celery('upvnews')
+app = Celery('front_soup')
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
