@@ -1,13 +1,16 @@
 import json
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.conf import settings
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
 from .models import Newspaper
 
 
 def get_or_create_schedule(hour, minute='00'):
-    schedule, _ = CrontabSchedule.objects.get_or_create(minute=minute, hour=hour)
+    schedule, _ = CrontabSchedule.objects.get_or_create(minute=minute,
+                                                        hour=hour,
+                                                        timezone=settings.TIME_ZONE)
     return schedule
 
 
