@@ -1,6 +1,38 @@
+import os
+import zipfile
+from datetime import datetime
 from django.contrib import admin
+from django.http import HttpResponse
+from io import BytesIO
 
 from .models import Data
+
+
+def download_datas(modeladmin, request, queryset):
+    """ Actions that create a buffer and add html files to zip """
+    buffer = BytesIO()
+    zip = zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED)
+    gen = datetime.now().isoformat()
+    if not queryset:
+        queryset = Data.objects.all()
+    for data in queryset:
+        newspaper = data.newspaper.name
+        date = data.created.strftime('%d-%m-%Y')
+        path = '/tmp/{}/{}/{}/'.format(gen, date, newspaper)
+        os.makedirs(path, exist_ok=True)
+        filename = data.created.strftime('%H:%M.html')
+        full_path = os.path.join(path, filename)
+        zip.writestr(full_path, data.html)
+    zip.close()
+
+    buffer.flush()
+    result = buffer.getvalue()
+    buffer.close()
+    response = HttpResponse(content_type='application/zip')
+    response['Content-Disposition'] = 'filename=datas.zip'
+    response.write(result)
+    return response
+download_datas.short_description = "Download .zip"
 
 
 @admin.register(Data)
@@ -8,6 +40,7 @@ class DataAdmin(admin.ModelAdmin):
     list_display = ('newspaper', 'created')
     search_fields = ('html', 'newspaper__name')
     list_filter = ('newspaper__name', 'created')
+    actions = [download_datas]
     current_query = ''
 
     def get_changelist_instance(self, request):
