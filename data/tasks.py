@@ -9,7 +9,7 @@ from .models import Data
 @shared_task
 def download_url(pk, url):
     page = requests.get(url)
-    content = page.content
+    content = page.text
     newspaper = get_object_or_404(Newspaper, pk=pk)
     data = Data(newspaper=newspaper, html=content)
     data.save()
