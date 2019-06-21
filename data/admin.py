@@ -1,6 +1,7 @@
 import os
 import zipfile
 from datetime import datetime
+from django.conf import settings
 from django.contrib import admin
 from django.http import HttpResponse
 from io import BytesIO
@@ -16,13 +17,9 @@ def download_datas(modeladmin, request, queryset):
     if not queryset:
         queryset = Data.objects.all()
     for data in queryset:
-        newspaper = data.newspaper.name
-        date = data.created.strftime('%d-%m-%Y')
-        path = '/tmp/{}/{}/{}/'.format(gen, date, newspaper)
-        os.makedirs(path, exist_ok=True)
-        filename = data.created.strftime('%H:%M.html')
-        full_path = os.path.join(path, filename)
-        zip.writestr(full_path, data.html)
+        for root, dirs, files in os.walk(os.path.join(settings.STATIC_ROOT, data.path)):
+            for file in files:
+                zip.write(os.path.join(root, file), os.path.join(data.path, file))
     zip.close()
 
     buffer.flush()
