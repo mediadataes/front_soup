@@ -15,7 +15,7 @@ def download_url(pk, strtime, url):
     now = timezone.now().strftime('%d-%m-%Y')
     path = '{}/{}/{}'.format(now, newspaper.name, strtime).replace(' ', '_')
     save_dir = os.path.join(settings.STATIC_ROOT, path)
-    command = 'wget -nd -E -k -H -p -P {} -A jpg,svg,gif,png,html,woff,css,js --no-use-server-timestamps --restrict-file-names=windows -e robots=off {}'
+    command = 'wget -nd -E -k -H -p -P {} -A jpg,svg,gif,png,html,woff,css,js --no-use-server-timestamps --restrict-file-names=windows -e robots=off -q {}'
     command = command.format(save_dir, url)
     os.popen(command)
     page = requests.get(url)

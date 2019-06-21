@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_celery_results',
     'django_nose',
+    'import_export',
 
     # My modules
     'newspaper',
@@ -147,3 +148,5 @@ NOSE_ARGS = [
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/app/static/'
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
