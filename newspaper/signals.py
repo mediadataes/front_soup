@@ -18,6 +18,7 @@ def get_or_create_schedule(hour, minute='00'):
 def post_save_handler(sender, instance, created,**kwargs):
     for time in ['morning', 'afternoon', 'night']:
         obj_time = getattr(instance, time)
+        strtime = obj_time.strftime('%H.%M')
         task_name = '{} {}'.format(instance.name, time)
         schedule = get_or_create_schedule(obj_time.hour, obj_time.minute)
         if created and instance.active:
@@ -25,14 +26,14 @@ def post_save_handler(sender, instance, created,**kwargs):
                 crontab=schedule,
                 name=task_name,
                 task='data.tasks.download_url',
-                args= json.dumps([instance.pk, instance.url])
+                args= json.dumps([instance.pk, strtime, instance.url])
             )
         elif not created and instance.active:
             defaults = {
                 'name': task_name,
                 'crontab': schedule,
                 'task': 'data.tasks.download_url',
-                'args': json.dumps([instance.pk, instance.url])
+                'args': json.dumps([instance.pk, strtime, instance.url])
             }
             task = PeriodicTask.objects.update_or_create(name=task_name,
                                                          defaults=defaults)

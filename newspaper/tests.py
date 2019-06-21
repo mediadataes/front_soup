@@ -84,6 +84,6 @@ class NewspaperTestCase(TestCase):
 
     def test_task_download(self):
         start_data = Data.objects.count()
-        download_url(self.np.pk, self.np.url)
+        download_url(self.np.pk, '16.00', self.np.url)
         end_data = Data.objects.count()
         self.assertEqual(end_data - start_data, 1)

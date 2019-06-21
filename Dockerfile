@@ -1,4 +1,8 @@
-FROM python:3.7-alpine
+FROM python:3.7.3-alpine3.9
+
+RUN apk update \
+    && apk add ca-certificates wget \
+    && update-ca-certificates
 
 RUN apk add --no-cache \
     postgresql-dev \

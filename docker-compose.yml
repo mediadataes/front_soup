@@ -21,8 +21,7 @@ services:
     restart: always
     container_name: fs_web
     build: .
-    command: ash -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
-
+    command: ash -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn -w 5 front_soup.wsgi --timeout=500 -b 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -53,6 +52,16 @@ services:
       - db
       - redis
         #user: "1000:1000"
+  nginx:
+    image: nginx:alpine
+    container_name: fs_nginx
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/app/static
+    depends_on:
+      - web
 
 volumes:
   fs-db:

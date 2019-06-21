@@ -6,6 +6,7 @@ from newspaper.models import Newspaper
 
 class Data(models.Model):
     newspaper = models.ForeignKey(Newspaper, on_delete=models.CASCADE)
+    path = models.CharField(max_length=128, default='')
     html = models.TextField()
     created = models.DateTimeField(auto_now=True)
 
