@@ -34,7 +34,7 @@ $ docker exec -ti fs_web python manage.py createsuperuser
 ## Add newspapers and review extract datas
 
 
-1. Enter in localhost:8000/admin and enter your credentials
+1. Enter in localhost:8080/admin and enter your credentials
 2. Add new newspaper in NEWSPAPER section and save it
 3. Wait some time and you could see some download html in DATA section
 
